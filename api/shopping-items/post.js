@@ -9,13 +9,14 @@ export default async (req, res) => {
     })
   }
 
+  const dbInstance = database()
   try {
-    const dbInstance = database()
     const client = await dbInstance.connect()
     const database = client.db('mern-shopping')
     const collection = database.collection('items')
 
     const result = await collection.insertMany(items)
+    dbInstance.disconnect(client)
 
     return res.status(200).json({
       message: 'posting shopping items',

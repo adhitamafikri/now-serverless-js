@@ -13,7 +13,7 @@ export default function MongoDB() {
 
     disconnect: async function(client) {
       console.log('disconnecting from DB')
-      await client.disconnect()
+      client.close()
     }
   }
 }
