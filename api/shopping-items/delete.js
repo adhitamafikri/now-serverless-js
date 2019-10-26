@@ -7,20 +7,24 @@ export default async (req, res) => {
     const database = client.db('mern-shopping')
     const collection = database.collection('items')
 
-    const queryLimit = req.query && req.query.limit
+    const itemID = req.body && req.body.id
 
-    const result = await collection.find()
-      .limit(parseInt(queryLimit, 10))
-      .toArray()
+    const result = await collection.deleteOne({ uuid: itemID })
     dbInstance.disconnect(client)
 
+    if (result.deletedCount === 0) {
+      return res.status(404).json({
+        message: 'No items were found',
+        result: result
+      })
+    }
     return res.status(200).json({
-      message: 'getting shopping items',
+      message: 'deleting shopping items',
       result: result
     })
   } catch(error) {
     return res.status(400).json({
-      message: 'Something went wrong',
+      message: 'Something went wrong when deleting item',
       error: error
     })
   }
